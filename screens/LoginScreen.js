@@ -1,10 +1,38 @@
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
 import { KeyboardAvoidingView, Image } from 'react-native'
+import { useNavigation } from '@react-navigation/native'
+import axios from 'axios'
 
 const LoginScreen = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const navigate = useNavigation();
+    const submitHandler = (e) => {
+        e.preventDefault();
+
+    console.log(
+      `https://java-api.codeboxxtest.xyz/authenticate?email=${email}&password=${password}`
+    );
+    var token = "";
+    axios
+      .post(`https://java-api.codeboxxtest.xyz/authenticate?email=${email}&password=${password}`)
+      .then((result) => {
+        console.log(
+          `https://java-api.codeboxxtest.xyz/authenticate?email=${email}&password=${password}`
+        );
+        const token = String(result.data["access_token"]);
+        console.log("result: " + token);
+        localStorage.setItem("token", token);
+        // navigate('/home')
+      })
+      .catch((error) => {
+        console.log(error);
+        alert("Invalid Login");
+      });
+    console.log(token);
+  };
+
   return (
     <View
         style={styles.container}
@@ -31,7 +59,7 @@ const LoginScreen = () => {
       </View>
       <View style={styles.buttonContainer}>
         <TouchableOpacity
-            onPress={() => { }}
+            onPress={submitHandler}
             style={styles.button}
         >
             <Text style={styles.buttonText}>Login</Text>
