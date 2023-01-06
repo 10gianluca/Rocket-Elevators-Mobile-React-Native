@@ -1,35 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { KeyboardAvoidingView, Image } from 'react-native';
+import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
 
-const employeeemail = [
-    "mathieu.houde@codeboxx.biz",
-    "patrick.thibault@codeboxx.biz",
-    "francis.patry-jessop@codeboxx.biz",
-    "david.amyot@codeboxx.biz",
-    "marie-eve.goupil@codeboxx.biz",
-    "francois.boivin@codeboxx.biz",
-    "timothy.wever@codeboxx.biz",
-    "kiril.kleinerman@codeboxx.biz",
-    "felicia.hartono@codeboxx.biz",
-    "eileen.ai@codeboxx.biz"
-]
-
 const LoginScreen = () => {
+  const [employeeEmails, setEmployeeEmails] = useState([]);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigation = useNavigation();
 
-  const submitHandler = async () => {
-    if (employeeemail.includes(email) && password === 'password123') {
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`https://localhost:7262/api/employee`);
+        setEmployeeEmails(response.data.map(employee => employee.email));
+      } catch (error) {
+        console.error(error);
+      }
+    };
+  
+    fetchData();
+  }, []);
+
+  const submitHandler = () => {
+    if (employeeEmails.includes(email) && password === 'password123') {
       navigation.navigate('Home');
-      alert('good');
     } else {
       alert('Incorrect Email Or Password');
     }
   };
-
   return (
 <View style={styles.container} behavior='padding'>
   <Image
