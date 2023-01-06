@@ -3,32 +3,29 @@ import { StyleSheet, Text, View, FlatList, TouchableOpacity, Button } from 'reac
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
 
-const token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjdXN0b21lcjFAYnVzaW5lc3MuY29tIiwiaXNzIjoiaHR0cHM6Ly9qYXZhLWFwaS5jb2RlYm94eHRlc3QueHl6L2F1dGhlbnRpY2F0ZSJ9.QbJsJ-MZXWieFf_fcAkNWI3S9Skqd-yFVF3S2h-uhfo"
-
 const HomeScreen = () => {
+  const navigation = useNavigation();
   const [elevatorData, setElevatorData] = useState([]);
-  const navigation = useNavigation();  
-
-  const fetchData = async () => {
-    axios.get('https://localhost:7262/api/elevator', {
-      headers: {
-          "Access-Control-Allow-Origin": "*"
-      }
-    })
-    .then(function (response) {
-      setElevatorData(response.data);
-    })
-    .catch(function (error) {
-      console.log(error);
-    }); 
-  };
 
   useEffect(() => {
+    const fetchData = async () => {
+      axios.get('https://localhost:7262/api/elevator', {
+        headers: {
+            "Access-Control-Allow-Origin": "*"
+        }
+      })
+      .then(function (response) {
+        setElevatorData(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      }); 
+    };
+
     fetchData();
-  }, []);
+  });
 
   const inactiveElevators = elevatorData.filter(elevator => elevator.status === "Inactive");
-
   return (
     <View style={styles.container}>
       <FlatList
@@ -68,4 +65,5 @@ const styles = StyleSheet.create({
     color: 'rgba(255, 38, 15, 0.8)',
   }
 });
-export default HomeScreen;
+export default HomeScreen; 
+
